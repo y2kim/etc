@@ -1,4 +1,5 @@
 DataBase : 데이터 입출력에 유리한 알고리즘을 적용한 데이터 기록 파일
+유기적으로 연관된 데이터를 모아놓은 데이터 집합체
 ----------
 발전역사
 없다가 양이 너무 많아서 시간이 오래걸려 알고리즘 바꿈 
@@ -7,10 +8,134 @@ array -> hash,tree
 성능이 좋으나  불편한점이 여러가지가 있었다 .
 // 편의성,안정성을 생각을 했다.   <- 이 이슈에관련해서는 사용자가 큰 문제임 
 트렌젝션 개념 도입   <-  DBMS 로 불리게 됨
-
 ------
-sql : DB 전용 명령어
-ddl
-dml
-dcl 
-tcl
+DBMS 데이터 베이스를 편리하게 사용할수 있게씀  명령어를 제공하고 안정성을 지켜주는 프로그램 
+------
+sql : 통상 명칭적인 단어  
+query : DB 전용 명령어으로써  카테고리 4개로 분류한다.
+-------------------------------------
+DDL (Data Definiition Language)
+- 데이터베이스 내에 개체를 생성/삭제/수정/초기화 등의 명령을 통칭
+- 일반적으로 데이터 베이스 관리자들이 주로 사용하는 명령
+DML (data Manipulaton Laguage)
+- 데이터 베이스 내에 데이터를 입력/조회(DQL)/수정/삭제 하는 명령을 통칭 
+- 개발자가 가장 많이 사용하는 구문 
+DCL : (Data Cntrol Language) 
+- 데이터베이스 내에 권환의 할당 / 제거 / 관리자 설정 등의 명령을 통칭
+- 일반적으로 데이터 베이스 관리자들이 주로 사용하는 명령 
+TCL : (Transaction Control Language)
+-안정성을 위해 도입된 트랙잭션 개념을 지원하기 위한 구문 
+-개발자 에서 많이 사용됨 
+----------------------------------
+세로 colum 가로 low
+엔터는 한줄 f5는 전체
+
+DQL : 조회문 
+select 컬럼명(컬럼헤더) from 테이블명; 
+-varchar : 가변적  
+-char : 불가변적  잦은 입출력이 있을때 용이
+DISTINCT : 중복제거
+nvl : 널값일때 다른값으로
+
+FLOOR : 소수점 제거
+sysdate : 현재시간 . dual 가비지
+ || or 연산자는 뒤에 붙임  ~~원 같은
+BETWEEN -  BETWEEN  and ~사이의 값
+-- = 은 같다 이다  ,'like 가 있다'  _ 한글자 아무거나  
+% 있거나 없거나 갯수 제한 없음 
+
+ESCAPE : 특정기능을 빼았고 일반문자로 변환 하는것   java의 \ 와같은 역활
+ex : '___#_%' ESCAPE'#' ;    아무 기호나 상관없음
+in ('~','~'....) ; -- or 연산자가 길어질때 짧게 코드를 짤때 
+
+
+---------------function
+lenght - 문자열 길이 구함 
+SELECT instr('Hello World HI High','H',1,1) FROM dual;
+(~~~,찾을 문자,어디부터 시작(- 이면 뒤부터), 몇번째) 
+-- LPAD / RPAD   채우다 라는 뜻  : 우리가 지정한 문자로 데이터의 왼쪽 또는 오른쪽을 채우는 함수
+
+l,r trim - 지정된 한방향으로 전부 지우는것
+trim - 한글자만 지정해서 지정한 글자를 지우는것 
+-Leading 앞쪽 지움-trailing 뒷쪽 지움- both :양쪽
+
+substr : 문자열 몇글자를 반환할거지에 관한 메소드 
+(대상,몇번째부터,몇개의 글자(없으면 전부))  방향은 왼쪽에서 오른쪽   // 반대방향안됨 
+
+upper lower - 대소 문자 
+initcap 공백이후 첫글자에 대문자
+concat()= ||
+replace  = 글자를  바꾸는것 
+--[문자]
+--ABS : 절대값  
+
+ --mod : 나머지 연산자
+
+  -- floor 소수점 같다 버림
+--TRUNC : 몇번째부터 소수점 같다 버림
+SELECT TRUNC(129.456,-1) FROM DUAL; -- 음수는 전부 정수를 0으로
+ceil - 무조건올림 
+--round 지정한 범위에서 반올림
+---[숫자]
+--sysdate : 현재 오라클 시스템의 시간값을 반환하는 함수
+
+-- month_betwwn : 인수로 넘어온 두개의 시간 간의 개월 수 차이
+-- add_months : 인수로 넘긴 숫자만큼의  개월을 더한 날짜를 리턴 
+
+-- next_day : 요일관련 메소드 /  기준날에서 가장 가까운 요일 출력 (지난날은 안나옴) 월 :2 일 :1
+last_day : 기준날에서 속한 마지막  날
+-- extract : 날짜값으로 부터 원하는 단위를 추출
+---[날짜]
+-- to_char 날자형,숫자데이터를 문자열로 반환  
+ 
+날짜
+문자열 : SELECT TO_CHAR(SYSDATE , 'YYYY-MM-DD') FROM DUAL; 
+SELECT TO_CHAR(SYSDATE , 'YYYY-MM-DD-DAY HH24:MI:SS') FROM DUAL;   
+FM 붙이면 앞의 0이 사라짐  (DY)
+숫자
+SELECT TO_CHAR(10000000,'999,999,999') FROM DUAL; 앞의 0제거
+000 일시에는 그대로 나옴   // 모두  포멧은 표현하는 숫자보다 커야한다 
+L : local  // 설정된 나라에  바뜀 
+
+to_date l숫자 또는 문자를 날짜형으로 변환
+SELECT TO_CHAR(TO_DATE(20000108,'yyyymmdd') )FROM DUAL; -- 결국 모양만들때에는 to char로 맞춰야함 (형태관련 이슈)
+SELECT TO_DATE('110108','mmyydd') FROM DUAL;  -- 분석하는 방법을 표현한것임 
+
+to number 날짜나 문자를 숫자로 변환  -- 중간에 문자 섞여있으면 안됨 
+SELECT TO_NUMBER('20000108') FROM DUAL; -- 순수한 숫자로만 구성되었을때만 변환가능
+SELECT TO_NUMBER('1,578,496','9,999,999') FROM DUAL;  중간에, 가 들어갔을경우 형태로 맞춰야함 
+
+decode  = java  default 없는 switch 같은 기능  = 여러가지 경우에 선택할 수 있는 기능을 제공 
+SELECT EMP_NAME as 이름 , decode(SUBSTR(EMP_NO,8,1),1,'남',2,'여') as 성별 FROM EMPLOYEE; -- substr 결과에 대하여 
+뒷 쪽으로 계속 붙일수 있다.   가변인수함수    간단한 조건문  복잡 불가  
+--case : 복잡한 여러가지 경우를 선택할수 있는 기능 제공 (자바의 IF에 해당 ) 
+SELECT EMP_NAME as 이름 ,
+case
+when SUBSTR(emp_no,8,1) = 1 then '남'
+when SUBSTR(emp_no,8,1) = 2 then '여'
+end as 성별
+FROM EMPLOYEE;
+
+-- 그룹 함수  하나의 행을 결과값을 말해주는것  총괄적인 개념   --  여러개 행이 나오는 결과값이 나오는거하고 같이 쓰면 에러 발생함
+sum - 행들의 합을 구해주는 함수
+SELECT sum(SALARY) FROM EMPLOYEE; -- 딱 하나의 행만 나옴 
+avg - 평균 
+SELECT TO_CHAR(avg(SALARY),'L999,999,999') FROM EMPLOYEE where DEPT_CODE like'D5';
+count  : 행의 갯수를 구해주는 함수   단 null값을 배제함   널값 배제 하고 싶으면 * 해주면 됨 
+SELECT count(DEPT_CODE) FROM EMPLOYEE; =21
+SELECT count(*) FROM EMPLOYEE; =23 
+SELECT count(DISTINCT DEPT_CODE) FROM EMPLOYEE;  = 6 : 중복제거 됨 
+--mxa min  전체 행에서 가장 큰값 또는 작은값 을 구하는 함수 
+SELECT max(SALARY) FROM EMPLOYEE;
+SELECT min(HIRE_DATE) FROM EMPLOYEE; 
+
+---[형 변환 ]  여담: switch 는 조건을 표현할수 있는것이 제한적이여서 if가 쎔 
+
+group by  = 그룹으로 묶을때 
+SELECT  DEPT_CODE , sum(SALARY) FROM EMPLOYEE GROUP BY DEPT_CODE ORDER BY DEPT_CODE; -- 묶일수 없는 존재가 있으면 에러 ,그룹함수는 가능
+group 뒤에 where 이 올수 없다
+그룹절에 또 하나 조건을 붙일수 있다 . 각 객체내부안의 그룹을 갖는다
+
+HAVING : group by 그룹지정 할때 조건 주는것   컬럼자체는 where  그룹은 having 
+
+--from 1  where 2 group 3 순   쿼리 분석 순서
