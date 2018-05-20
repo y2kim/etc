@@ -139,3 +139,24 @@ group 뒤에 where 이 올수 없다
 HAVING : group by 그룹지정 할때 조건 주는것   컬럼자체는 where  그룹은 having 
 
 --from 1  where 2 group 3 순   쿼리 분석 순서
+
+
+
+------------------------- 집계함수 
+rollup / cube  함수 :  그룹화 된 데이터에 대해 집계를 수행하는 함수  
+그룹을 단일인지 다중인지  구분하면서 사용
+rollup,cube  : 합계 구하는것   cube가 확장성이 있음 
+
+-- grouping : 함수  집계의 함수에서 나오는 null은 1 값을 가지고 있다   rollup,cube에 의해 생성되면  1이 나옴
+
+---[]
+join -- 하나 이상의 테이블에서 연관된 정보를 모아 하나의 가상테이블로 만들어 주는 명령
+--innerjoin - 내부조인	
+-- 동등조인 자연조인 교차조인
+-- Selfjoin - 자기조인
+-- job table
+select JOB_NAME from job,DEPARTMENT; -- 교차조인 , 아무의미 없음  ,카디션프로덕트  = 곱셈 이미 교차되어 있다 , 잘못사용을 했을때 나오는결과
+
+SELECT job_code FROM EMPLOYEE , job;  - column ambiguously defined 라는 에러가 뜬다   ambiguously  - 모호한다는 뜻
+SELECT  EMPLOYEE.JOB_CODE,job.JOB_CODE FROM EMPLOYEE , job; --컬럼명이 겹치면 앞에 테이블명 붙이면 됨 
+SELECT  e.JOB_CODE,j.JOB_CODE FROM EMPLOYEE e, job j; --컬럼명이 겹치면 앞에 테이블명 붙이면 됨,  테이블에 별명 붙일수도 있다

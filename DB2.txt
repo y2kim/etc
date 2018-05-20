@@ -1,0 +1,211 @@
+서브쿼리 : 쿼리 안의 쿼리 
+(SELECT EMP_ID , EMP_NAME FROM EMPLOYEE); -- 임시테이블
+SELECT dept_code from (SELECT EMP_ID , EMP_NAME FROM EMPLOYEE); -- SELECT dept_code from  -- 메인쿼리 -- 에러
+SELECT EMP_NAME from (SELECT EMP_ID , EMP_NAME FROM EMPLOYEE); -- SELECT dept_code from  -- 메인쿼리  -- 정상작동
+----
+--1. 전지현 직원의 manager ID 알아야 함
+SELECT MANAGER_ID FROM EMPLOYEE where EMP_NAME = '전지연';
+--2. 전지현 직원의 manager 이름
+SELECT EMP_NAME FROM EMPLOYEE where EMP_ID =214;
+-- 서브쿼리   예시
+SELECT emp_name FROM EMPLOYEE 
+where EMP_ID = (SELECT MANAGER_ID FROM EMPLOYEE where EMP_NAME='전지연');
+-----
+---- 서브쿼리+ join
+SELECT d.DEPT_TITLE, e1.EMP_ID, e1.EMP_NAME , TO_CHAR(e1.SALARY , 'L999,999,999')
+FROM EMPLOYEE e1 , DEPARTMENT d
+where e1.SALARY > (SELECT floor(AVG(salary)) FROM EMPLOYEE where EMPLOYEE.DEPT_CODE = 'D5')
+and e1.DEPT_CODE in ('D1','D2') and e1.DEPT_CODE=d.DEPT_ID  ORDER BY 1; 
+-----------------
+다중행 서브쿼리 , 비교연산자 사용 불가 
+-- 다중행 서브쿼리에 대해 사용가능한 연산자 : in / not in / any / all /exist
+
+SELECT e1.DEPT_CODE
+FROM EMPLOYEE e1
+where e1.EMP_NAME in ('박나라','송종기');
+-- 이번에는  송종기 박나라가 포함된 부서 멤버들을 출력  
+SELECT * FROM EMPLOYEE e1
+where e1.DEPT_CODE in (SELECT DEPT_CODE FROM EMPLOYEE where EMP_NAME in ('박나라','송종기'));    
+ --  받아야 할 값이 2개인대  받을수 있는 값이 1개 밖에 없으니 오류
+
+-- ANY 하나만 true 여도 true ~~중 보다
+salary 값이 any 그룹 안에 묶에 있는 값들 중 최소값 보다 크면 참 salary > any();
+salary 값이 any 그룹 안에 묶에 있는 값들 중 최댓값 보다 작으면 참  salary< any();	
+--ALL 이중 하나가  False 여도 False ~~것들보다 
+SELECT EMP_NAME,SALARY FROM EMPLOYEE where SALARY > all(2000000,3000000,5000000); -- 최댓값이 넘어야 함   -- 여기있는것들보다 크다면
+SELECT EMP_NAME,SALARY FROM EMPLOYEE where SALARY <= all(2000000,3000000,5000000); -- = 일때 정상동작은 안함 
+--exist	존재 결과가 있나 없나 확인에 따라 실행 유무
+
+-- 다중 열 서브 쿼리 
+-- 퇴사한 여직원에 대해서 같은 직급, 같은 부서에 근무 하는 사원의 이름과 직급 부서 입사일 출력
+SELECT DEPT_CODE,JOB_CODE FROM EMPLOYEE where SUBSTR(EMP_NO,8,1) =2 and ENT_YN = 'Y';
+
+SELECT EMP_NAME,JOB_CODE,DEPT_CODE,HIRE_DATE FROM EMPLOYEE
+where (DEPT_CODE,JOB_CODE)in (SELECT DEPT_CODE,JOB_CODE FROM EMPLOYEE where SUBSTR(EMP_NO,8,1) =2 and ENT_YN = 'Y');
+
+SELECT EMP_NAME ,(SELECT DEPT_TITLE FROM DEPARTMENT where dept_id = DEPT_CODE) -- 상관서브쿼리
+FROM EMPLOYEE ;
+
+---- 순위 측정 기능 
+--rownum : 출력되는 행마다 행 번호를 붙여주는 객체
+SELECT rownum, EMP_NAME , SALARY FROM EMPLOYEE order by salary desc; -- rownum이 꼬임 
+SELECT rownum, EMP_NAME , SALARY FROM (SELECT * FROM EMPLOYEE ORDER BY SALARY desc); -- 
+
+rank() OVER(대상)
+SELECT EMP_NAME,SALARY, rank() OVER (ORDER BY SALARY DESC) FROM EMPLOYEE;
+SELECT EMP_NAME,SALARY, rank() OVER (ORDER BY SALARY DESC) FROM EMPLOYEE; -- 공동순위가 있을시 다음 순위는  공동순위 수 만큼 떨어짐
+SELECT dense_rank() OVER (ORDER BY SALARY DESC),EMP_NAME,SALARY FROM EMPLOYEE; -- 중간 공백을 허가 하지 않음
+
+-- DML , DDL 
+DDL 부터 시작  
+DDL : oracle 내에 객체를 생성 , 수정,삭제 하는 명령어를 통칭
+
+테이블 : 객체 , create : 객체  
+create TABLE person("테이블 구조 '); constract   -- 생성 create
+comment - 주석 
+
+drop TABLE person; -- 객체 삭제 - drop
+
+    gender VARCHAR(10) check (gender in ('남','여'))  - 남 여 값만이 받을수 있게
+
+    id varchar(20) PRIMARY KEY, --null값과 중복을 허용하지 않음 unique 성격
+    중복되지 않고 null값을 허용하지않는 컬럼값을 만들고 싶을때  이미 기본키 설정되었을때 unique 사용
+-- default 값을 지정하지 않았을때  default 치면 설정해준 기본값이 들어간다
+
+-- foreign key 외부키 
+
+create TABLE shopping(
+ buy_no number primary key,
+ id varchar(20) REFERENCES person(id), -- 다른테이블의 특정값을 끌어다가 참조무결성 용도   -- 외부키
+ 
+);
+
+-- on delete restrice : 아예 삭제 불가능함 
+-- on delete set null : 외부키 삭제시 참조갑 전부 null
+-- on delete caccade : 외부키 삭제시 참조값도 삭제
+
+insert into person (age) VALUES (20);
+insert into person (name,age) VALUES ('jack',30);
+insert into person (id,name,age) VALUES ('1001','jack',30);
+--insert into person  VALUES ('1001','jack',30); -[]value 모든값을 넣겠다는 전제가 깔림
+
+--dml > dql > select
+-- dml > insert / update / delete
+--create /alter / drop
+ 
+--alter : 오라클에 정의된 객체의 내용을 수정할때 사용하는 Query  - update와 혼동하지 말것 update 데이터 alter 테이블
+--테이블 컬럼 추가/삭제 제약조건의 추가 /삭제  
+--테이블 컬럼 자료형의 변경/이름 변경
+alter table member add (userName VARCHAR(20));
+alter table member add (userAge VARCHAR(10) DEFAULT 0); --  추가
+alter table member modify (userAge number DEFAULT 0); -- 자료형 변경
+alter table member rename COLUMN userpwd to password ; -- 이름 변경
+alter table member drop (userage); -- 삭제
+--- 제약조건 관련 
+alter table member add unique (userId); -- 유니크 제약조건 추가  
+--
+-- data dictionary : Oracle 기본적으로 가지고 있는 내장 테이블
+--DBA-???:데이터 베이스 관리자 적용하는 설정 및 생성하는 객체정보등을 기록하는 테이블 
+-- ALL_??? :  현재 접속한 사용자의 설정 및 객체 정보와 권한을 가지고 있는 다른 계정 정보까지 포함하는 테이블
+-- USER_???? :  현제 접속한 사용자의 설정 및 객체 정보만을 기록하는 테이블
+--
+alter table member add unique (userId); -- 유니크 제약조건 추가
+SELECT CONSTRAINT_NAME,CONSTRAINT_TYPE,table_name 
+from USER_CONSTRAINTS where TABLE_NAME = 'MEMBER'; -- 기록들를 볼수 있음 
+
+SELECT table_name from user_tables;
+
+ALTER table member drop CONSTRAINT SYS_C007067 ; -- 유니크 삭제 
+alter table member add CONSTRAINT user_unique unique (userId); -- constrannint 에다가 이름을 붙어 구별할수 있게 이름 붙이는 작업
+
+--DCL : 데이터 컨트롤 랭귀지 권한 ,보안, 무결성 ,복구 등등 DB 제어하기 위한 query
+--TCL : Transction contrl langage 
+-- GRANT / REVOKE / COMMIT / ROLLBACK 
+-- 여기서 관리자로 바꿈 
+
+create user test IDENTIFIED by test; -- 생성 
+grant connect to test; -- 권한
+grant SELECT on KH.DEPARTMENT to test; -- 권한
+grant INSERT on KH.DEPARTMENT to test; -- 권한
+
+grant ~~to
+
+SELECT * FROM kh.employee;
+
+select * from KH.department;
+
+insert into kh.department values('E1','전략기획부','L3');
+
+select * from KH.DEPARTMENT;
+desc KH.DEPARTMENT;
+-- REVOKE 권한 뺐았는것
+revoke ~~ from
+REVOKE INSERT ON KH.DEPARTMENT from test;
+REVOKE SELECT ON KH.DEPARTMENT from test;
+REVOKE SELECT ON KH.EMPLOYEE from test;
+
+--dcl > TCL  
+--Transaction : 한꺼번에 수행 되어야 할 최소의 작업 단위를 의미   : DB에 접근하기 전에  거쳐감  가상  
+-- 목적 1. 잘못된 명령어 방지 , 목적2. 작업의 원자성 , 목적3. 안정성 
+--commit 이후로는 돌리지 못함   , rollback 이전으로 돌림  , savepoint : 타이밍을 정한 롤백 
+--
+delete from person;
+desc person;
+
+insert into person VALUES('1001','jack',50);
+SELECT * FROM PERSON;
+commit; -- 진짜로 적용
+
+
+insert into person VALUES('1002','jain',25);--트랜젝션에 우선 저장함  -- 배송정보 
+SELECT * FROM PERSON;
+rollback; -- 트랜젝션에 내용 지움
+-- try catch -- 예시로  원자성 설명  
+
+SAVEPOINT beforeDelete; -- 마지막 커밋을 기억하며 할것
+delete from person;
+rollback to beforeDelete;
+
+데이터 베이스 내에 존재하는 객체 (OBJECT)
+
+SEQUENCE
+
+create SEQUENCE product_seq--
+start with 5 INCREMENT by 1-- x부터 y 만큼 증가 
+MAXVALUE 10000 -- 최대갯수
+NOCYCLE -- max 초과 할경우 에러를 발생시키겠다 (설정안하면 1로 복귀)
+NOCACHE;  -- 디스크 ,메모리 관련  성능관리   -- 근데 성능은 떨어트린다  안정성은 높여지고
+
+--view  : 링크로 연결된 가상의 테이블
+ --truncate : 트렌젝션 없이 바로 직빵으로 삭제 
+grant create view to kh ; --kh가 view 권한 없기 때문에 생성
+commit; : 실질적으로 데이터 적용
+
+
+create view emp_view as SELECT emp_no,emp_name,email,phone,emp_id from EMPLOYEE; -- 링크로 연결된 가상의 테이블
+--alter table member add (userAge VARCHAR(10) DEFAULT 0);
+--alter view emp_view add(emp);
+drop view emp_view;
+--alter view emp_view as(SELECT emp_no,emp_name,email,phone,emp_id from EMPLOYEE) ;
+create or replace view emp_view as SELECT emp_no,emp_name,email,phone,emp_id from EMPLOYEE;
+
+INDEX
+--index  sql 명령문의 처리속도를 향상시키기 위해서 컬럼에 대해 지정하는 오라클 객체 
+--일반적으로 DQL 가치를 가짐
+-- Index 단점 추가적인 저장공간을 필요로 한다.
+--중복관련   primary,unique 에 적용하는게 효율적   ! 단 unique 는 널값이 허용된다.
+--데이터 변경작업 insert/update/delete 번번히 발생하는 테이블에서 index 사용하면 성능저하 발생
+-- index 장점  적정할 상황에 적용했을 시 검색 속도를 높일 수 있다.
+--한 테이블 내에 데이터가 대량일 경우 
+--한 번 입력된 데이터가 자주 변경되지 않는 테이블 
+
+SELECT * FROM USER_IND_COLUMNS;
+
+create index emp_index on employee (emp_name);
+commit;
+
+--synonym 
+-- 길게 표횐되는 것을 동의어로 설정해서 간단히 사용하는 것
+grant create SYNONYM to kh; --이녀석도 권한이 있어야함  - system
+
+create SYNONYM emp for employee;
