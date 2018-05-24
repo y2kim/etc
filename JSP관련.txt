@@ -1,0 +1,49 @@
+Request : 요청에 관련에 대한 정보 
+Response : 응답 (Html,js,css) <- 소스코드가 담겨있다 
+인프라 대한 이해    
+Get   , Post  방식의 Request    <- 개발자 입장에서 
+get : URL 탑재 (주소창 방식) (절대 주소값  , 어디든 볼수 있음) 
+(대량데이터 보낼수 없음 ,  보안성이 떨어짐 )
+https://  : 프로토콜
+search.naver.com : ip 주소 (dns)
+/search.naver?where=nexearch&sm=top_sug.pre&fbm=1&acr=1&acq=%EC%A0~~%A8&qdt=0&ie=utf8&query=~~~
+ POST : 보내는 데이터를 Request 내부에 탑재하여 전송하는 방식 
+          장점 :  표면적으로 데이터가 노출되지 않으므로 보안성 강화  , request 내부 영역을 이용하므로 데이터 사이즈가 크다
+          단점 :  절대 주소를 가질 수 없다. 
+
+/// W A S (web app server)[ex : tomcat ](communite 기능 확장이 됨 )
+servlet(협업 해줄수 있는 것들을 통칭하는것들 )
+
+자바스크립트 : 브라우저 통해서 / 클라이언트에서만 실행 / 프론트엔드에서만 
+자바 :  서버에서만 실행   
+
+패키지 필수 
+HTML 요청 그대로 돌려보냄
+Servlet : 요청이 오면  처리하고 맞게  작업후   끝난후  HTML로 돌려보냄
+superclass: 상위 클래스  // 지우면  그냥 클래스임 .. //서블릿은  상속받은클래스 
+
+apache  <  apache tomcat (+ servlet 과 통신 하능 기능 )
+
+
+서버에서 DB 처리 부분 MODEL  or 비지니스 이라고 함 
+
+
+클라이언트 보게되는 부분 VIEW part라고 함 
+
+
+
+--------------------------------------------------
+JSP 2번 컴파일 html 처럼 보이지만 java이다 
+1차 서블릿 (response.getWriter();)pw.append 해준다 
+2차 기계어 (자바의 그 컴파일)
+
+
+<% %> :  Scriptlet   - Servlet으로 컴파일 되었을때  _jspService 메서드 내부에 들어가는 코드 - 지역필드
+
+<%! %> : Declaration(선언문) -  함수의 선언 , static , 변수 선언 영역  실행영역불가 - 멤버필드
+
+<%= %>
+표현식 : out.write ([해당영역])
+
+
+<%@ %> : 지시어  Directive - 라이브러리  import 같은것  , 인텔리 센스 이용해서 더블클릭
