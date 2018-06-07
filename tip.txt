@@ -1,0 +1,7 @@
+﻿제목?id=+$("#id").val(),  <-  html 에서  jsp에서 값 보낼때  
+
+
+---------------------------
+한글 깨지는 현상   :      request..setCharacecerEncoding("euckr"); <- 명령     :  POST방식   X URL    <- get parameter 하기 전에 할것 ,각 페이지 마다 일일이 할것 
+
+URL 처리방식  : 톰캣 설정   	 URIEncoding="euckr"

@@ -1,0 +1,11 @@
+성능이슈 1  
+connecttion DB   :    ConnectionPool 미리생성   - 접속자 통제  - 트래픽 관련  - DBCP  - JNDI 리소스 자체 생성  (톰캣자체에서 DBCP 생성 )
+
+
+https://d2.naver.com/helloworld/605418
+
+
+http://insight.dbpia.co.kr/article/related.do?nodeId=NODE00621936
+
+
+http://www.holaxprogramming.com/2013/01/10/devops-how-to-manage-dbcp/
