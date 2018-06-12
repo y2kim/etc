@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Chat</title>
+<style>
+	table{
+		border:1px dotted black;
+	}
+	
+	#chat{
+		width:200px;
+		height:200px;
+	}
+	
+</style>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script>
+$(document).ready(function(){
+	
+	setInterval(function(){
+		$.ajax({
+			url:"getchatproc.do",
+			type:"get",
+			success:function(resp){
+				$("#chat").html(resp);
+			}
+		})
+	},1000);
+	
+	$("#send").click(function(){
+		var msg = $("#input").val();
+		$("#input").val("");
+		
+		$.ajax({
+			url:"chatproc.do",
+			data:{msg:msg},
+			type:"post"
+		})
+	})
+})
+</script>
+</head>
+<body>
+	<table align=center>
+		<tr>
+			<td><div id="chat" cols=28 rows=10></div>
+		</tr>
+		<tr>
+			<td><input type=text id="input"><button id="send">send</button>
+		</tr>
+	</table>
+</body>
+</html>

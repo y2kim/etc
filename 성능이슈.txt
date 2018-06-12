@@ -9,3 +9,27 @@ http://insight.dbpia.co.kr/article/related.do?nodeId=NODE00621936
 
 
 http://www.holaxprogramming.com/2013/01/10/devops-how-to-manage-dbcp/
+
+
+static DB동기화와는 관련이 크게 없다    
+
+커넥션을  
+
+1초에 한번씩  생성   ///  하나는 글 받아오는 
+
+ajax 로 웹 채팅 했을 때 1초식 받아올때  무리가 가는상황   
+이걸 해결하기위해 소켓을 사용 
+
+디렉티브는 컴파일 되면서 조립이 되면서   한페이지    정적변수
+
+액션태그는 동적태그  - 다시와서 페이지가 조립되고  조립되고 
+
+<%@include file="include/bottom.jsp"%>(디렉티브 인크루드 ) (페이지 고정) [주를 이룬다 ]
+: 파일 하나로 합치니까  변수 하나를 사용할수 있다    변수값을 공유함
+
+성능 38 차이 때문에   디렉티브 인크루드 사용됨 
+
+<jsp:include page="include/bottom.jsp"/>  (새로운 내용을 부를때 )
+: 변수값을 공유하지 못함
+
+JSTL  core tag   
