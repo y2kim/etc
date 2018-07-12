@@ -17,3 +17,15 @@ mybatis 문법 통제를 받고싶을시  mybatis dtd 를 이용
 environments  - 환경 -      
 
 mapper  나중에 스프링 하면 여러개 나옴 
+다음 매퍼 설정
+
+------------------------
+mybatis mapper dtd   - 매퍼 설정
+
+서비스레이아웃 - 트랙젝션 처리 라는 이슈가 해결하기위한 
+
+--------------------
+namespace =  DAO 에  동작할 이름 정하는것 
+
+parameterType  =  ? ? <-  같은거 
+select 에는  resultType  써줘야 한다 
