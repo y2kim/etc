@@ -11,10 +11,12 @@ dbcp 랑 비슷   스프링이랑 비슷함
 config - 오라클 사용할지  계정 아이비와 비밀번호등 
 mapper  - 1개당 테이블 1개  여러개 일수있음 
 
-
+(실질적은  개발자의 영역은 아님 )
 -----------------------------
 mybatis 문법 통제를 받고싶을시  mybatis dtd 를 이용 
 environments  - 환경 -      
+
+typeAliases  <- 일일이 부르기 번거로우니  줄여서 부르겠다 
 
 mapper  나중에 스프링 하면 여러개 나옴 
 다음 매퍼 설정
@@ -28,4 +30,17 @@ mybatis mapper dtd   - 매퍼 설정
 namespace =  DAO 에  동작할 이름 정하는것 
 
 parameterType  =  ? ? <-  같은거 
-select 에는  resultType  써줘야 한다 
+select 에는  resultType  써줘야 한다   
+
+
+
+Mybatis 사용 순서 
+mybatis 라이브러리 첨부 - config.xml - mapper 구성  - factory 클래스 구성 - Session  가져다 사용
+
+# ,= dao 처럼 쿼리 열을 붙여야함 
+ $('') 붙여야 함 
+$ = bean      [dto 타입으로 넘겨야 할듯 ]        인스턴스로 인식 getter 로 치환   getse
+
+ ${value }  <- 써야 함  
+/ insert,update /     EL 이랑 비슷   
+
